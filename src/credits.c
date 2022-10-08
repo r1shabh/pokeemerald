@@ -29,13 +29,15 @@
 #define TAG_MON_BG 1001
 
 // Positions for the Pokémon images
-enum {
+enum
+{
     POS_LEFT,
     POS_CENTER,
     POS_RIGHT,
 };
 
-enum {
+enum
+{
     MODE_NONE,
     MODE_BIKE_SCENE,
     MODE_SHOW_MONS,
@@ -44,32 +46,32 @@ enum {
 #define tState data[0]
 
 // Task data for the main Credits tasks
-#define tTaskId_BgScenery  data[0] // ID for Task_BicycleBgAnimation (created by CreateBicycleBgAnimationTask)
-#define tTaskId_BikeScene  data[1] // ID for Task_BikeScene
+#define tTaskId_BgScenery data[0]  // ID for Task_BicycleBgAnimation (created by CreateBicycleBgAnimationTask)
+#define tTaskId_BikeScene data[1]  // ID for Task_BikeScene
 #define tTaskId_SceneryPal data[2] // ID for Task_CycleSceneryPalette
-#define tTaskId_ShowMons   data[3] // ID for Task_ShowMons
-#define tEndCredits        data[4]
-#define tPlayerSpriteId    data[5]
-#define tRivalSpriteId     data[6]
-#define tSceneNum          data[7]
+#define tTaskId_ShowMons data[3]   // ID for Task_ShowMons
+#define tEndCredits data[4]
+#define tPlayerSpriteId data[5]
+#define tRivalSpriteId data[6]
+#define tSceneNum data[7]
 // data[8]-[10] are unused
-#define tNextMode          data[11]
-#define tTheEndDelay       data[12]
-#define tCurrentMode       data[13]
-#define tPrintedPage       data[14]
+#define tNextMode data[11]
+#define tTheEndDelay data[12]
+#define tCurrentMode data[13]
+#define tPrintedPage data[14]
 #define tTaskId_UpdatePage data[15]
 
 #define NUM_MON_SLIDES 71
 
 struct CreditsData
 {
-    u16 monToShow[NUM_MON_SLIDES]; // List of Pokemon species ids that will show during the credits
-    u16 imgCounter; //how many mon images have been shown
-    u16 nextImgPos; //if the next image spawns left/center/right
-    u16 currShownMon; //index into monToShow
-    u16 numMonToShow; //number of pokemon to show, always NUM_MON_SLIDES after determine function
-    u16 caughtMonIds[NATIONAL_DEX_COUNT]; //temporary location to hold a condensed array of all caught pokemon
-    u16 numCaughtMon; //count of filled spaces in caughtMonIds
+    u16 monToShow[NUM_MON_SLIDES];        // List of Pokemon species ids that will show during the credits
+    u16 imgCounter;                       // how many mon images have been shown
+    u16 nextImgPos;                       // if the next image spawns left/center/right
+    u16 currShownMon;                     // index into monToShow
+    u16 numMonToShow;                     // number of pokemon to show, always NUM_MON_SLIDES after determine function
+    u16 caughtMonIds[NATIONAL_DEX_COUNT]; // temporary location to hold a condensed array of all caught pokemon
+    u16 numCaughtMon;                     // count of filled spaces in caughtMonIds
     u16 unused[7];
 };
 
@@ -119,219 +121,265 @@ static u8 CreateCreditsMonSprite(u16, s16, s16, u16);
 static void DeterminePokemonToShow(void);
 
 static const u8 sTheEnd_LetterMap_T[] =
-{
-    0,    1, 0,
-    0xFF, 1, 0xFF,
-    0xFF, 1, 0xFF,
-    0xFF, 1, 0xFF,
-    0xFF, 1, 0xFF,
+    {
+        0,
+        1,
+        0,
+        0xFF,
+        1,
+        0xFF,
+        0xFF,
+        1,
+        0xFF,
+        0xFF,
+        1,
+        0xFF,
+        0xFF,
+        1,
+        0xFF,
 };
 
 static const u8 sTheEnd_LetterMap_H[] =
-{
-    1, 0xFF, 1,
-    1, 0xFF, 1,
-    1, 2,    1,
-    1, 0xFF, 1,
-    1, 0xFF, 1,
+    {
+        1,
+        0xFF,
+        1,
+        1,
+        0xFF,
+        1,
+        1,
+        2,
+        1,
+        1,
+        0xFF,
+        1,
+        1,
+        0xFF,
+        1,
 };
 
 static const u8 sTheEnd_LetterMap_E[] =
-{
-    1, 0, 0,
-    1, 0xFF, 0xFF,
-    1, 2,    2,
-    1, 0xFF, 0xFF,
-    1, 0x80, 0x80,
+    {
+        1,
+        0,
+        0,
+        1,
+        0xFF,
+        0xFF,
+        1,
+        2,
+        2,
+        1,
+        0xFF,
+        0xFF,
+        1,
+        0x80,
+        0x80,
 };
 
 static const u8 sTheEnd_LetterMap_N[] =
-{
-    1, 3, 1,
-    1, 4, 1,
-    1, 5, 1,
-    1, 0xC4, 1,
-    1, 0xC3, 1,
+    {
+        1,
+        3,
+        1,
+        1,
+        4,
+        1,
+        1,
+        5,
+        1,
+        1,
+        0xC4,
+        1,
+        1,
+        0xC3,
+        1,
 };
 
 static const u8 sTheEnd_LetterMap_D[] =
-{
-    1, 6, 7,
-    1, 8, 9,
-    1, 0xFF, 1,
-    1, 0x88, 0x89,
-    1, 0x86, 0x87,
+    {
+        1,
+        6,
+        7,
+        1,
+        8,
+        9,
+        1,
+        0xFF,
+        1,
+        1,
+        0x88,
+        0x89,
+        1,
+        0x86,
+        0x87,
 };
 
 #include "data/credits.h"
 
 static const struct BgTemplate sBackgroundTemplates[] =
-{
     {
-        .bg = 0,
-        .charBaseIndex = 2,
-        .mapBaseIndex = 28,
-        .screenSize = 0,
-        .paletteMode = 0,
-        .priority = 0,
-        .baseTile = 0
-    },
+        {.bg = 0,
+         .charBaseIndex = 2,
+         .mapBaseIndex = 28,
+         .screenSize = 0,
+         .paletteMode = 0,
+         .priority = 0,
+         .baseTile = 0},
 };
 static const struct WindowTemplate sWindowTemplates[] =
-{
     {
-        .bg = 0,
-        .tilemapLeft = 0,
-        .tilemapTop = 9,
-        .width = 30,
-        .height = 12,
-        .paletteNum = 8,
-        .baseBlock = 1
-    },
-    DUMMY_WIN_TEMPLATE,
+        {.bg = 0,
+         .tilemapLeft = 0,
+         .tilemapTop = 9,
+         .width = 30,
+         .height = 12,
+         .paletteNum = 8,
+         .baseBlock = 1},
+        DUMMY_WIN_TEMPLATE,
 };
 static const u8 sMonSpritePos[][2] =
-{
-    {104, 36},
-    {120, 36},
-    {136, 36},
+    {
+        {104, 36},
+        {120, 36},
+        {136, 36},
 };
 
 static const union AnimCmd sAnim_Player_Slow[] =
-{
-    ANIMCMD_FRAME(0, 8),
-    ANIMCMD_FRAME(64, 8),
-    ANIMCMD_FRAME(128, 8),
-    ANIMCMD_FRAME(192, 8),
-    ANIMCMD_JUMP(0),
+    {
+        ANIMCMD_FRAME(0, 8),
+        ANIMCMD_FRAME(64, 8),
+        ANIMCMD_FRAME(128, 8),
+        ANIMCMD_FRAME(192, 8),
+        ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_Player_Fast[] =
-{
-    ANIMCMD_FRAME(0, 4),
-    ANIMCMD_FRAME(64, 4),
-    ANIMCMD_FRAME(128, 4),
-    ANIMCMD_FRAME(192, 4),
-    ANIMCMD_JUMP(0),
+    {
+        ANIMCMD_FRAME(0, 4),
+        ANIMCMD_FRAME(64, 4),
+        ANIMCMD_FRAME(128, 4),
+        ANIMCMD_FRAME(192, 4),
+        ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_Player_LookBack[] =
-{
-    ANIMCMD_FRAME(256, 4),
-    ANIMCMD_FRAME(320, 4),
-    ANIMCMD_FRAME(384, 4),
-    ANIMCMD_END,
+    {
+        ANIMCMD_FRAME(256, 4),
+        ANIMCMD_FRAME(320, 4),
+        ANIMCMD_FRAME(384, 4),
+        ANIMCMD_END,
 };
 
 static const union AnimCmd sAnim_Player_LookForward[] =
-{
-    ANIMCMD_FRAME(384, 30),
-    ANIMCMD_FRAME(320, 30),
-    ANIMCMD_FRAME(256, 30),
-    ANIMCMD_FRAME(256, 30),
-    ANIMCMD_END,
+    {
+        ANIMCMD_FRAME(384, 30),
+        ANIMCMD_FRAME(320, 30),
+        ANIMCMD_FRAME(256, 30),
+        ANIMCMD_FRAME(256, 30),
+        ANIMCMD_END,
 };
 
 static const union AnimCmd *const sAnims_Player[] =
-{
-    sAnim_Player_Slow,
-    sAnim_Player_Fast,
-    sAnim_Player_LookBack,
-    sAnim_Player_LookForward,
+    {
+        sAnim_Player_Slow,
+        sAnim_Player_Fast,
+        sAnim_Player_LookBack,
+        sAnim_Player_LookForward,
 };
 
 static const union AnimCmd sAnim_Rival_Slow[] =
-{
-    ANIMCMD_FRAME(0, 8),
-    ANIMCMD_FRAME(64, 8),
-    ANIMCMD_FRAME(128, 8),
-    ANIMCMD_FRAME(192, 8),
-    ANIMCMD_JUMP(0),
+    {
+        ANIMCMD_FRAME(0, 8),
+        ANIMCMD_FRAME(64, 8),
+        ANIMCMD_FRAME(128, 8),
+        ANIMCMD_FRAME(192, 8),
+        ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_Rival_Fast[] =
-{
-    ANIMCMD_FRAME(0, 4),
-    ANIMCMD_FRAME(64, 4),
-    ANIMCMD_FRAME(128, 4),
-    ANIMCMD_FRAME(192, 4),
-    ANIMCMD_JUMP(0),
+    {
+        ANIMCMD_FRAME(0, 4),
+        ANIMCMD_FRAME(64, 4),
+        ANIMCMD_FRAME(128, 4),
+        ANIMCMD_FRAME(192, 4),
+        ANIMCMD_JUMP(0),
 };
 
 static const union AnimCmd sAnim_Rival_Still[] =
-{
-    ANIMCMD_FRAME(0, 4),
-    ANIMCMD_END,
+    {
+        ANIMCMD_FRAME(0, 4),
+        ANIMCMD_END,
 };
 
 static const union AnimCmd *const sAnims_Rival[] =
-{
-    sAnim_Rival_Slow,
-    sAnim_Rival_Fast,
-    sAnim_Rival_Still,
+    {
+        sAnim_Rival_Slow,
+        sAnim_Rival_Fast,
+        sAnim_Rival_Still,
 };
 
 #define MONBG_OFFSET (MON_PIC_SIZE * 3)
 static const struct SpriteSheet sSpriteSheet_MonBg[] = {
-    { gDecompressionBuffer, MONBG_OFFSET, TAG_MON_BG },
+    {gDecompressionBuffer, MONBG_OFFSET, TAG_MON_BG},
     {},
 };
 static const struct SpritePalette sSpritePalette_MonBg[] = {
-    { (const u16 *)&gDecompressionBuffer[MONBG_OFFSET], TAG_MON_BG },
+    {(const u16 *)&gDecompressionBuffer[MONBG_OFFSET], TAG_MON_BG},
     {},
 };
 
 static const struct OamData sOamData_MonBg =
-{
-    .y = DISPLAY_HEIGHT,
-    .affineMode = ST_OAM_AFFINE_OFF,
-    .objMode = ST_OAM_OBJ_NORMAL,
-    .mosaic = FALSE,
-    .bpp = ST_OAM_4BPP,
-    .shape = SPRITE_SHAPE(64x64),
-    .x = 0,
-    .matrixNum = 0,
-    .size = SPRITE_SIZE(64x64),
-    .tileNum = 0,
-    .priority = 1,
-    .paletteNum = 0,
-    .affineParam = 0,
+    {
+        .y = DISPLAY_HEIGHT,
+        .affineMode = ST_OAM_AFFINE_OFF,
+        .objMode = ST_OAM_OBJ_NORMAL,
+        .mosaic = FALSE,
+        .bpp = ST_OAM_4BPP,
+        .shape = SPRITE_SHAPE(64x64),
+        .x = 0,
+        .matrixNum = 0,
+        .size = SPRITE_SIZE(64x64),
+        .tileNum = 0,
+        .priority = 1,
+        .paletteNum = 0,
+        .affineParam = 0,
 };
 
 static const union AnimCmd sAnim_MonBg_Yellow[] =
-{
-    ANIMCMD_FRAME(0, 8),
-    ANIMCMD_END,
+    {
+        ANIMCMD_FRAME(0, 8),
+        ANIMCMD_END,
 };
 
 static const union AnimCmd sAnim_MonBg_Red[] =
-{
-    ANIMCMD_FRAME(64, 8),
-    ANIMCMD_END,
+    {
+        ANIMCMD_FRAME(64, 8),
+        ANIMCMD_END,
 };
 
 static const union AnimCmd sAnim_MonBg_Blue[] =
-{
-    ANIMCMD_FRAME(128, 8),
-    ANIMCMD_END,
+    {
+        ANIMCMD_FRAME(128, 8),
+        ANIMCMD_END,
 };
 
 static const union AnimCmd *const sAnims_MonBg[] =
-{
-    [POS_LEFT]   = sAnim_MonBg_Yellow,
-    [POS_CENTER] = sAnim_MonBg_Red,
-    [POS_RIGHT]  = sAnim_MonBg_Blue,
+    {
+        [POS_LEFT] = sAnim_MonBg_Yellow,
+        [POS_CENTER] = sAnim_MonBg_Red,
+        [POS_RIGHT] = sAnim_MonBg_Blue,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_CreditsMonBg =
-{
-    .tileTag = TAG_MON_BG,
-    .paletteTag = TAG_MON_BG,
-    .oam = &sOamData_MonBg,
-    .anims = sAnims_MonBg,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCB_CreditsMonBg,
+    {
+        .tileTag = TAG_MON_BG,
+        .paletteTag = TAG_MON_BG,
+        .oam = &sOamData_MonBg,
+        .anims = sAnims_MonBg,
+        .images = NULL,
+        .affineAnims = gDummySpriteAffineAnimTable,
+        .callback = SpriteCB_CreditsMonBg,
 };
 
 static void VBlankCB_Credits(void)
@@ -346,9 +394,7 @@ static void CB2_Credits(void)
     RunTasks();
     AnimateSprites();
 
-    if ((JOY_HELD(B_BUTTON))
-     && gHasHallOfFameRecords
-     && gTasks[sSavedTaskId].func == Task_CreditsMain)
+    if ((JOY_HELD(B_BUTTON)) && gHasHallOfFameRecords && gTasks[sSavedTaskId].func == Task_CreditsMain)
     {
         // Speed up credits
         VBlankCB_Credits();
@@ -579,16 +625,8 @@ static void Task_LoadShowMons(u8 taskId)
         BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
         SetGpuReg(REG_OFFSET_BG3HOFS, 0);
         SetGpuReg(REG_OFFSET_BG3VOFS, 32);
-        SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3)
-                                   | BGCNT_CHARBASE(0)
-                                   | BGCNT_SCREENBASE(7)
-                                   | BGCNT_16COLOR
-                                   | BGCNT_TXT256x256);
-        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0
-                                    | DISPCNT_OBJ_1D_MAP
-                                    | DISPCNT_BG0_ON
-                                    | DISPCNT_BG3_ON
-                                    | DISPCNT_OBJ_ON);
+        SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(7) | BGCNT_16COLOR | BGCNT_TXT256x256);
+        SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON | DISPCNT_BG3_ON | DISPCNT_OBJ_ON);
 
         gMain.state = 0;
         gIntroCredits_MovingSceneryState = INTROCRED_SCENERY_NORMAL;
@@ -629,17 +667,11 @@ static void Task_CreditsTheEnd3(u8 taskId)
     FreeAllSpritePalettes();
     BeginNormalPaletteFade(PALETTES_ALL, 8, 16, 0, RGB_BLACK);
 
-    SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0)
-                               | BGCNT_CHARBASE(0)
-                               | BGCNT_SCREENBASE(7)
-                               | BGCNT_16COLOR
-                               | BGCNT_TXT256x256);
+    SetGpuReg(REG_OFFSET_BG0CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(7) | BGCNT_16COLOR | BGCNT_TXT256x256);
     EnableInterrupts(INTR_FLAG_VBLANK);
-    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0
-                                | DISPCNT_OBJ_1D_MAP
-                                | DISPCNT_BG0_ON);
+    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | DISPCNT_BG0_ON);
 
-    gTasks[taskId].tDelay = 235; //set this to 215 to actually show "THE END" in time to the last song beat
+    gTasks[taskId].tDelay = 235; // set this to 215 to actually show "THE END" in time to the last song beat
     gTasks[taskId].func = Task_CreditsTheEnd4;
 }
 
@@ -720,7 +752,7 @@ static void ResetGpuAndVram(void)
 }
 
 #define tCurrentPage data[2]
-#define tDelay       data[3]
+#define tDelay data[3]
 
 static void Task_UpdatePage(u8 taskId)
 {
@@ -759,8 +791,8 @@ static void Task_UpdatePage(u8 taskId)
                 for (i = 0; i < ENTRIES_PER_PAGE; i++)
                     PrintCreditsText(
                         sCreditsEntryPointerTable[gTasks[taskId].tCurrentPage][i]->text,
-                         5 + i * 16,
-                         sCreditsEntryPointerTable[gTasks[taskId].tCurrentPage][i]->isTitle);
+                        5 + i * 16,
+                        sCreditsEntryPointerTable[gTasks[taskId].tCurrentPage][i]->isTitle);
                 CopyWindowToVram(0, COPYWIN_GFX);
 
                 gTasks[taskId].tCurrentPage++;
@@ -912,9 +944,9 @@ static void Task_ShowMons(u8 taskId)
         if (sCreditsData->imgCounter == NUM_MON_SLIDES || gTasks[gTasks[taskId].tMainTaskId].func != Task_CreditsMain)
             break;
         spriteId = CreateCreditsMonSprite(sCreditsData->monToShow[sCreditsData->currShownMon],
-                                    sMonSpritePos[sCreditsData->nextImgPos][0],
-                                    sMonSpritePos[sCreditsData->nextImgPos][1],
-                                    sCreditsData->nextImgPos);
+                                          sMonSpritePos[sCreditsData->nextImgPos][0],
+                                          sMonSpritePos[sCreditsData->nextImgPos][1],
+                                          sCreditsData->nextImgPos);
         if (sCreditsData->currShownMon < sCreditsData->numMonToShow - 1)
         {
             sCreditsData->currShownMon++;
@@ -948,8 +980,8 @@ static void Task_ShowMons(u8 taskId)
 #undef tDelay
 
 #define tPlayer data[2]
-#define tRival  data[3]
-#define tDelay  data[4]
+#define tRival data[3]
+#define tDelay data[4]
 #define tSinIdx data[5]
 
 static void Task_BikeScene(u8 taskId)
@@ -1035,8 +1067,8 @@ static void Task_BikeScene(u8 taskId)
     }
 }
 
-#define TIMER_STOP  0x7FFF
-#define tTimer      data[1]
+#define TIMER_STOP 0x7FFF
+#define tTimer data[1]
 #define tMainTaskId data[2]
 
 static void Task_CycleSceneryPalette(u8 taskId)
@@ -1296,7 +1328,7 @@ static void LoadTheEndScreen(u16 tileOffsetLoad, u16 tileOffsetWrite, u16 palOff
     baseTile = (palOffset / 16) << 12;
 
     for (i = 0; i < 32 * 32; i++)
-        ((u16 *) (VRAM + tileOffsetWrite))[i] = baseTile + 1;
+        ((u16 *)(VRAM + tileOffsetWrite))[i] = baseTile + 1;
 }
 
 static u16 GetLetterMapTile(u8 baseTiles)
@@ -1322,7 +1354,7 @@ static void DrawLetterMapTiles(const u8 baseTiles[], u8 baseX, u8 baseY, u16 off
     for (y = 0; y < 5; y++)
     {
         for (x = 0; x < 3; x++)
-            ((u16 *) (VRAM + offset + (baseY + y) * 64))[baseX + x] = tileOffset + GetLetterMapTile(baseTiles[y * 3 + x]);
+            ((u16 *)(VRAM + offset + (baseY + y) * 64))[baseX + x] = tileOffset + GetLetterMapTile(baseTiles[y * 3 + x]);
     }
 }
 
@@ -1332,7 +1364,7 @@ static void DrawTheEnd(u16 offset, u16 palette)
     u16 baseTile = (palette / 16) << 12;
 
     for (pos = 0; pos < 32 * 32; pos++)
-        ((u16 *) (VRAM + offset))[pos] = baseTile + 1;
+        ((u16 *)(VRAM + offset))[pos] = baseTile + 1;
 
     DrawLetterMapTiles(sTheEnd_LetterMap_T, 3, 7, offset, palette);
     DrawLetterMapTiles(sTheEnd_LetterMap_H, 7, 7, offset, palette);
@@ -1532,8 +1564,7 @@ static u8 CreateCreditsMonSprite(u16 nationalDexNum, s16 x, s16 y, u16 position)
 
 static void SpriteCB_CreditsMonBg(struct Sprite *sprite)
 {
-    if (gSprites[sprite->sMonSpriteId].data[0] == 10
-     || gIntroCredits_MovingSceneryState != INTROCRED_SCENERY_NORMAL)
+    if (gSprites[sprite->sMonSpriteId].data[0] == 10 || gIntroCredits_MovingSceneryState != INTROCRED_SCENERY_NORMAL)
     {
         DestroySprite(sprite);
         return;
@@ -1595,8 +1626,7 @@ static void DeterminePokemonToShow(void)
             sCreditsData->caughtMonIds[page] = sCreditsData->caughtMonIds[sCreditsData->numCaughtMon];
             sCreditsData->caughtMonIds[sCreditsData->numCaughtMon] = 0;
         }
-    }
-    while (sCreditsData->numCaughtMon != 0 && j < NUM_MON_SLIDES);
+    } while (sCreditsData->numCaughtMon != 0 && j < NUM_MON_SLIDES);
 
     // If we don't have enough pokemon in the dex to fill everything, copy the selected mon into the end of the array, so it loops
     if (sCreditsData->numMonToShow < NUM_MON_SLIDES)
@@ -1615,12 +1645,13 @@ static void DeterminePokemonToShow(void)
     else
     {
         // Check to see if our starter has already appeared in this list, break if it has
-        for (dexNum = 0; sCreditsData->monToShow[dexNum] != starter && dexNum < NUM_MON_SLIDES; dexNum++);
+        for (dexNum = 0; sCreditsData->monToShow[dexNum] != starter && dexNum < NUM_MON_SLIDES; dexNum++)
+            ;
 
         // If it has, swap it with the last pokemon, to ensure our starter is the last image
         if (dexNum < sCreditsData->numMonToShow - 1)
         {
-            sCreditsData->monToShow[dexNum] = sCreditsData->monToShow[NUM_MON_SLIDES-1];
+            sCreditsData->monToShow[dexNum] = sCreditsData->monToShow[NUM_MON_SLIDES - 1];
             sCreditsData->monToShow[NUM_MON_SLIDES - 1] = starter;
         }
         else
